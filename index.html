@@ -19,4 +19,20 @@
       Yeehaw
     </div>
   </body>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+    
+    function changeColor(boolean a) {
+      if(a == true)
+      {
+        document.getElementById("yeehaw").className = 'g';
+      }
+      else
+      {
+        document.getElementById("yeehaw").className = 'b';
+      }      
+      setTimeout(changeColor(!a), 1000);
+    }
+    //changeColor(false);    
+  </script>
 </html>
