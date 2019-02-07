@@ -171,6 +171,7 @@
 			var result2 = 0;
 			var result3 = 0;
 			var highestRoll = 0;
+			var crit = false;
 			function novice(p1) {
 				result1 = Math.floor(Math.random() * 12) + 1;
 				setHighestRoll();
@@ -223,6 +224,26 @@
 				}
 				else {
 					highestRoll = result3;
+				}
+				if(highestRoll == 1)
+				{
+					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: firebrick; display: inline-block;'>critical failure.</div>";
+					crit = false;
+				}
+				else if(highestRoll == 12 && crit == false)
+				{
+					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: gold; display: inline-block;'>roll again to try for a critical success.</div>";
+					crit = true;
+				}
+				else if(highestRoll == 12 && crit == true)
+				{
+					crit = false;
+					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: darkgreen; display: inline-block;'>critical success!</div>";
+				}
+				else 
+				{
+					document.getElementById("rollresults").innerHTML = "Roll results: ";
+					crit = false;
 				}
 			}
 		
