@@ -218,11 +218,11 @@
 				document.getElementById("val8").innerHTML = diplomacy + highestRoll;
 			}
 			function setHighestRoll() {
-				if(result1 > result2 && result1 > result3)
+				if(result1 >= result2 && result1 >= result3)
 				{
 					highestRoll = result1;
 				}
-				else if(result2 > result1 && result2 > result3) {
+				else if(result2 >= result1 && result2 >= result3) {
 					highestRoll = result2;
 				}
 				else {
