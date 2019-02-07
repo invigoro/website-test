@@ -9,7 +9,9 @@
 				font-weight: 500;
 			}
 			.cont {
-				margin: auto;
+				margin-left: auto;
+				margin-right: auto;
+				display: block;
 			}
 			.dice-box {
 				width: calc(0.15 * 100vh);
@@ -31,10 +33,54 @@
 				background-color: firebrick;
 				color: white;
 			}
-			#results {
-				
+			#rolls {
+				margin-left: 15px;
 			}
-			
+			#form {
+				width: 100%;
+				background-color: lightcoral;
+				padding: 20px 0;
+			}
+			#inputlist {
+				list-style-type: none;
+				margin: 0;
+				overflow: hidden;
+			}
+			#inputlist > li {
+				width: 11%;
+				padding: 5px;
+				display: inline-block;
+			}
+			@media only screen and (max-width: 1000px) {
+				#inputlist > li {
+					width: 22%;
+				}
+			}
+			#inputlist > li > input[type=text] {
+				width: 100%;
+				padding: 12px 20px;
+				margin: 8px 0px;
+				display: inline-block;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				box-sizing: border-box;
+			}
+			#submit {
+				margin-left: auto;
+				margin-right: auto;
+				display: block;
+				padding: 15px;
+				border-radius: 20px;
+				border: none;
+				font-weight: 800;
+				color: lightcoral;
+				background-color: white;
+				font-size: 20px;
+			}
+			#submit:hover{
+				background-color: firebrick;
+				color: white;
+			}
 		</style>
 	</head>
 	<body>
@@ -57,14 +103,53 @@
 			</div>
 		</div>
 		<h2>Roll results:</h2>
-		<div id="results">
-			<div id="rolls">
-				
-			</div>
-			<div id="values">
-				
-			</div>
-		</div>
+		<h3 id="rolls"></h3>
+		<div id="formcontainer">
+			<form id="form">
+				<ul id="inputlist">
+					<li>
+						<h2 id='val1'></h2>
+						<label>Endurance</label>
+						<input type="text" id="endurance" value="0">
+					</li>
+					<li>
+						<h2 id='val2'></h2>
+						<label>Strength</label>
+						<input type="text" id="strength" value="0">
+					</li>
+					<li>
+						<h2 id='val3'></h2>
+						<label>Agility</label>
+						<input type="text" id="agility" value="0">
+					</li>
+					<li>
+						<h2 id='val4'></h2>
+						<label>Knowledge</label>
+						<input type="text" id="knowledge" value="0">
+					</li>
+					<li>
+						<h2 id='val5'></h2>
+						<label>Cunning</label>
+						<input type="text" id="cunning" value="0">
+					</li>
+					<li>
+						<h2 id='val6'></h2>
+						<label>Instinct</label>
+						<input type="text" id="instinct" value="0">
+					</li>
+					<li>
+						<h2 id='val7'></h2>
+						<label>Resolve</label>
+						<input type="text" id="resolve" value="0">
+					</li>
+					<li>
+						<h2 id='val8'></h2>
+						<label>Diplomacy</label>
+						<input type="text" id="diplomacy" value="0">
+					</li>
+				</ul>
+				<input id='submit' type="button" value="Update Values" onclick="updateVals()">
+			</form>
 		<script>
 			var endurance = 0;
 			var strength = 0;
@@ -74,20 +159,63 @@
 			var instinct = 0;
 			var resolve = 0;
 			var diplomacy = 0;
+			var result1 = 0;
+			var result2 = 0;
+			var result3 = 0;
+			var highestRoll = 0;
 			function novice(p1) {
-				var result1 = Math.floor(Math.random() * 12) + 1;
+				result1 = Math.floor(Math.random() * 12) + 1;
+				setHighestRoll();
+				updateRolls();
 				document.getElementById("rolls").innerHTML = result1;
 			}
 			function proficient() {
-				var result1 = Math.floor(Math.random() * 12) + 1;
-				var result2 = Math.floor(Math.random() * 12) + 1;
+				result1 = Math.floor(Math.random() * 12) + 1;
+				result2 = Math.floor(Math.random() * 12) + 1;
+				setHighestRoll();
+				updateRolls()
 				document.getElementById("rolls").innerHTML = result1 + " " + result2;
 			}
 			function expert() {
-				var result1 = Math.floor(Math.random() * 12) + 1;
-				var result2 = Math.floor(Math.random() * 12) + 1;
-				var result3 = Math.floor(Math.random() * 12) + 1;
+				result1 = Math.floor(Math.random() * 12) + 1;
+				result2 = Math.floor(Math.random() * 12) + 1;
+				result3 = Math.floor(Math.random() * 12) + 1;
+				setHighestRoll();
+				updateRolls();
 				document.getElementById("rolls").innerHTML = result1 + " " + result2 + " " + result3;
+			}
+			function updateVals() {
+				endurance = Number(document.getElementById("endurance").value);
+				strength = Number(document.getElementById("strength").value);
+				agility = Number(document.getElementById("agility").value);
+				knowledge = Number(document.getElementById("knowledge").value);
+				cunning = Number(document.getElementById("cunning").value);
+				instinct = Number(document.getElementById("instinct").value);
+				resolve = Number(document.getElementById("resolve").value);
+				diplomacy = Number(document.getElementById("diplomacy").value);
+				updateRolls();
+			}
+			function updateRolls() {
+				document.getElementById("val1").innerHTML = endurance + highestRoll;
+				document.getElementById("val2").innerHTML = strength + highestRoll;
+				document.getElementById("val3").innerHTML = agility + highestRoll;
+				document.getElementById("val4").innerHTML = knowledge + highestRoll;
+				document.getElementById("val5").innerHTML = cunning + highestRoll;
+				document.getElementById("val6").innerHTML = instinct + highestRoll;
+				document.getElementById("val7").innerHTML = resolve + highestRoll;
+				document.getElementById("val8").innerHTML = diplomacy + highestRoll;
+			}
+			function setHighestRoll() {
+				if(result1 > result2 && result1 > result3)
+				{
+					highestRoll = result1;
+				}
+				else if(result2 > result1 && result2 > result3) {
+					highestRoll = result2;
+				}
+				else {
+					highestRoll = result3;
+				}
 			}
 		
 		</script>
