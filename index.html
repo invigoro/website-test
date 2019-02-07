@@ -1,39 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      .b { 
-        color: navy;
-        font-size: 50px;
-        font-weight: bold;
-      }
-      .g {
-        color: gold;
-        font-size: 50px;
-        font-weight: bold;
-      }
-    </style>
-  </head>
-  <body>
-    <div class='b' id='yeehaw'>
-      Yeehaw
-    </div>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script>
-    
-      function changeColor(boolean a) {
-        if(a == true)
-        {
-          document.getElementById("yeehaw").className = 'g';
-        }
-        else
-        {
-          document.getElementById("yeehaw").className = 'b';
-        }      
-        setTimeout(changeColor(!a), 1000);
-      }
-      changeColor(true);    
-    </script>
-  </body>
-  
-</html>
+<body>
+
+<h2>Yeehaw</h2>
+
+<button type="button"
+onclick="document.getElementById('demo').innerHTML = Date()">
+Click me to display Date and Time.</button>
+
+<p id="demo"></p>
+
+</body>
+</html> 
