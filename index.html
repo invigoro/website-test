@@ -8,8 +8,14 @@
 				font-family: 'Helvetica';
 				font-weight: 500;
 			}
-			.dice, #rolls, #inputlist > li, #inputlist > li > input[type=text], #inputlist > li > ul > label {
+			.dice, #rolls, #inputlist > li, #inputlist > li > input[type=text], #inputlist > li > ul > label, #submit {
 				font-size: calc(0.02 * 100vh);
+			}
+			#rollresults {
+				font-size: calc(0.03 * 100vh);
+			}
+			h1 {
+				font-size: calc(0.04 * 100vh);
 			}
 			.cont {
 				margin-left: auto;
@@ -78,7 +84,6 @@
 				font-weight: 800;
 				color: lightcoral;
 				background-color: white;
-				font-size: 20px;
 			}
 			#submit:hover{
 				background-color: firebrick;
@@ -105,7 +110,7 @@
 				</div>
 			</div>
 		</div>
-		<h2>Roll results:</h2>
+		<h2 id='rollresults'>Roll results:</h2>
 		<h3 id="rolls"></h3>
 		<div id="formcontainer">
 			<form id="form">
