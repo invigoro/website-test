@@ -1,14 +1,95 @@
 <!DOCTYPE html>
 <html>
-<body>
-
-<h2>Yeehaw</h2>
-
-<button type="button"
-onclick="document.getElementById('demo').innerHTML = Date()">
-Click me to display Date and Time.</button>
-
-<p id="demo"></p>
-
-</body>
-</html> 
+	<head>
+		<style>
+			:root {
+			}
+			* {
+				font-family: 'Helvetica';
+				font-weight: 500;
+			}
+			.cont {
+				margin: auto;
+			}
+			.dice-box {
+				width: calc(0.15 * 100vh);
+				height: calc(0.15 * 100vh);
+				display: inline-block;
+				margin: 0.3%;
+				padding: 15px;
+			}
+			.dice {
+				border-radius: 20px;
+				vertical-align: center;
+				text-align: center;
+				padding-top: calc(0.06 * 100vh);
+				padding-bottom: calc(0.06 * 100vh);
+				background-color: lightcoral;
+				font-weight: 800;
+			}
+			.dice:hover {
+				background-color: firebrick;
+				color: white;
+			}
+			#results {
+				
+			}
+			
+		</style>
+	</head>
+	<body>
+		<h1>Click on a box to roll your dice</h1>
+		<div class="cont">
+			<div class="dice-box">
+				<div class="dice" onclick="novice(0)">
+					Novice
+				</div>
+			</div>
+			<div class="dice-box">
+				<div class="dice" onclick="proficient()">
+					Proficient
+				</div>
+			</div>
+			<div class="dice-box">
+				<div class="dice" onclick="expert()">
+					Expert
+				</div>
+			</div>
+		</div>
+		<h2>Roll results:</h2>
+		<div id="results">
+			<div id="rolls">
+				
+			</div>
+			<div id="values">
+				
+			</div>
+		</div>
+		<script>
+			var endurance = 0;
+			var strength = 0;
+			var agility = 0;
+			var knowledge = 0;
+			var cunning = 0;
+			var instinct = 0;
+			var resolve = 0;
+			var diplomacy = 0;
+			function novice(p1) {
+				var result1 = Math.floor(Math.random() * 12) + 1;
+				document.getElementById("rolls").innerHTML = result1;
+			}
+			function proficient() {
+				var result1 = Math.floor(Math.random() * 12) + 1;
+				var result2 = Math.floor(Math.random() * 12) + 1;
+				document.getElementById("rolls").innerHTML = result1 + " " + result2;
+			}
+			function expert() {
+				var result1 = Math.floor(Math.random() * 12) + 1;
+				var result2 = Math.floor(Math.random() * 12) + 1;
+				var result3 = Math.floor(Math.random() * 12) + 1;
+				document.getElementById("rolls").innerHTML = result1 + " " + result2 + " " + result3;
+			}
+		
+		</script>
+	</body>
+<html>
