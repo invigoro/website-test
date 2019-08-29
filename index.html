@@ -89,13 +89,26 @@
 				background-color: firebrick;
 				color: white;
 			}
+			.bargraph {
+				background-color: purple;
+				margin: auto;
+			}
+			.bargraph-wrapper {
+				display: inline-block;
+				padding: 10px;
+				margin-left: auto; 
+				margin-right: auto;
+				border-bottom: 2px lightgray solid;
+				text-align: center;
+			}
 		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	</head>
 	<body>
 		<h1>Click on a box to roll your dice</h1>
 		<div class="cont">
 			<div class="dice-box">
-				<div class="dice" onclick="novice(0)">
+				<div class="dice" onclick="novice()">
 					Novice
 				</div>
 			</div>
@@ -156,9 +169,13 @@
 						<input type="text" id="diplomacy" value="0">
 					</li>
 				</ul>
-				<input id='submit' type="button" value="Update Values" onclick="updateVals()">
 			</form>
+			<div id='graph'>
+			</div>
 		<script>
+			const maxRoll = 20;
+
+			
 			var endurance = 0;
 			var strength = 0;
 			var agility = 0;
@@ -172,8 +189,8 @@
 			var result3 = 0;
 			var highestRoll = 0;
 			var crit = false;
-			function novice(p1) {
-				result1 = Math.floor(Math.random() * 12) + 1;
+			function novice() {
+				result1 = Math.floor(Math.random() * maxRoll) + 1;
 				result2 = 0; 
 				result3 = 0;
 				setHighestRoll();
@@ -181,17 +198,17 @@
 				document.getElementById("rolls").innerHTML = result1;
 			}
 			function proficient() {
-				result1 = Math.floor(Math.random() * 12) + 1;
-				result2 = Math.floor(Math.random() * 12) + 1;
+				result1 = Math.floor(Math.random() * maxRoll) + 1;
+				result2 = Math.floor(Math.random() * maxRoll) + 1;
 				result3 = 0;
 				setHighestRoll();
 				updateRolls()
 				document.getElementById("rolls").innerHTML = result1 + " " + result2;
 			}
 			function expert() {
-				result1 = Math.floor(Math.random() * 12) + 1;
-				result2 = Math.floor(Math.random() * 12) + 1;
-				result3 = Math.floor(Math.random() * 12) + 1;
+				result1 = Math.floor(Math.random() * maxRoll) + 1;
+				result2 = Math.floor(Math.random() * maxRoll) + 1;
+				result3 = Math.floor(Math.random() * maxRoll) + 1;
 				setHighestRoll();
 				updateRolls();
 				document.getElementById("rolls").innerHTML = result1 + " " + result2 + " " + result3;
@@ -233,12 +250,12 @@
 					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: firebrick; display: inline-block;'>critical failure.</div>";
 					crit = false;
 				}
-				else if(highestRoll == 12 && crit == false)
+				else if(highestRoll == maxRoll && crit == false)
 				{
 					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: gold; display: inline-block;'>roll again to try for a critical success.</div>";
 					crit = true;
 				}
-				else if(highestRoll == 12 && crit == true)
+				else if(highestRoll == maxRoll && crit == true)
 				{
 					crit = false;
 					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: darkgreen; display: inline-block;'>critical success!</div>";
@@ -250,6 +267,29 @@
 				}
 			}
 		
+			$("input[type=text]").change(function() {
+				updateVals();
+			});
+			$("input[type=text]").focus(function() {
+				updateVals();
+			});
+
+			drawGraphs();
+			function drawGraphs() {
+				//alert("Called this");
+				const graphSize = 300
+				const graphWidth = 40
+				document.getElementById("graph").innerHTML = "<h2>Probability of rolls: </h2><div>";
+				for(var i = 1; i <= 3; i++) {
+					for(var j = 0; j < maxRoll; j++){
+						var val = j + 1;
+						var probs = graphSize * (1 - Math.pow((j / maxRoll), i));
+						document.getElementById("graph").innerHTML += "<div class='bargraph-wrapper'><div class='bargraph' style='width: " + graphWidth + "px; height: " + probs + "px;'></div><p>" + val + "</p></div>";
+					}
+					document.getElementById("graph").innerHTML += "</div><div>";
+				}
+				document.getElementById("graph").innerHTML += "</div>";
+			}
 		</script>
 	</body>
 <html>
