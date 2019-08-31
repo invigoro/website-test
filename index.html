@@ -12,15 +12,21 @@
 				font-size: calc(0.02 * 100vh);
 			}
 			#rollresults {
-				font-size: calc(0.03 * 100vh);
+				font-size: 1.5em;
 			}
 			h1 {
-				font-size: calc(0.04 * 100vh);
+				font-size: 2.5em;
+				text-align: center;
+			}
+			h2 { 
+				text-align: center;
 			}
 			.cont {
 				margin-left: auto;
 				margin-right: auto;
 				display: block;
+				width: auto;
+				text-align: center;
 			}
 			.dice-box {
 				width: calc(0.15 * 100vh);
@@ -89,17 +95,30 @@
 				background-color: firebrick;
 				color: white;
 			}
-			.bargraph {
-				background-color: purple;
+			.bargraph1 {
+				background-color: green;
 				margin: auto;
+			}
+			.bargraph2 {
+				background-color: blue;
+				margin: auto;
+			}
+			.bargraph3 {
+				background-color: red;
+				margin: auto;
+			}
+			.bargraph-wrapper2 {
+				padding: 0px 10px;
+				border-bottom: 2px gray solid
 			}
 			.bargraph-wrapper {
 				display: inline-block;
-				padding: 10px;
-				margin-left: auto; 
-				margin-right: auto;
-				border-bottom: 2px lightgray solid;
+				width: auto;
 				text-align: center;
+			}
+			.bargraph {
+				text-align: center;
+				padding: 30px;
 			}
 		</style>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -277,18 +296,23 @@
 			drawGraphs();
 			function drawGraphs() {
 				//alert("Called this");
-				const graphSize = 300
-				const graphWidth = 40
-				document.getElementById("graph").innerHTML = "<h2>Probability of rolls: </h2><div>";
+				const graphSize = 300;
+				const graphWidth = 40;
+				//document.getElementById("graph").innerHTML = "<h2 style='margin-top: 50px'>Probability Charts</h2>";
+				var titles = ["Novice", "Proficient", "Expert"];
+				var colors = ["lightgray", "white", "lightgray"];
 				for(var i = 1; i <= 3; i++) {
+					var str = "<div class='bargraph' style='background-color: " + colors[i - 1] + "'>";
+					str += "<h3 style='text-align: center;'>Probability of rolling <i>x</i> or higher using <strong>" + titles[i - 1] + "</strong></h3>";
+					
 					for(var j = 0; j < maxRoll; j++){
 						var val = j + 1;
-						var probs = graphSize * (1 - Math.pow((j / maxRoll), i));
-						document.getElementById("graph").innerHTML += "<div class='bargraph-wrapper'><div class='bargraph' style='width: " + graphWidth + "px; height: " + probs + "px;'></div><p>" + val + "</p></div>";
+						var probs = (1 - Math.pow((j / maxRoll), i));
+						str += "<div class='bargraph-wrapper'><p>" + Math.round(probs * 100) + "%</p><div class='bargraph-wrapper2'><div class='bargraph" + i + "' style='width: " + graphWidth + "px; height: " + probs*graphSize + "px;'></div></div><p>" + val + "</p></div>";
 					}
-					document.getElementById("graph").innerHTML += "</div><div>";
+					str += "</div>";
+					document.getElementById("graph").innerHTML += str;
 				}
-				document.getElementById("graph").innerHTML += "</div>";
 			}
 		</script>
 	</body>
