@@ -21,6 +21,9 @@
 			h2 { 
 				text-align: center;
 			}
+			h3 {
+				text-align: center;
+			}
 			.cont {
 				margin-left: auto;
 				margin-right: auto;
@@ -194,7 +197,6 @@
 		<script>
 			const maxRoll = 20;
 
-			
 			var endurance = 0;
 			var strength = 0;
 			var agility = 0;
@@ -207,7 +209,7 @@
 			var result2 = 0;
 			var result3 = 0;
 			var highestRoll = 0;
-			var crit = false;
+			//var crit = false;
 			function novice() {
 				result1 = Math.floor(Math.random() * maxRoll) + 1;
 				result2 = 0; 
@@ -267,52 +269,72 @@
 				if(highestRoll == 1)
 				{
 					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: firebrick; display: inline-block;'>critical failure.</div>";
-					crit = false;
-				}
+					//crit = false;
+				}/*
 				else if(highestRoll == maxRoll && crit == false)
 				{
 					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: gold; display: inline-block;'>roll again to try for a critical success.</div>";
 					crit = true;
-				}
-				else if(highestRoll == maxRoll && crit == true)
+				}*/
+				else if(highestRoll == maxRoll/* && crit == true*/)
 				{
-					crit = false;
+					//crit = false;
 					document.getElementById("rollresults").innerHTML = "Roll results: <div style='color: darkgreen; display: inline-block;'>critical success!</div>";
 				}
 				else 
 				{
-					document.getElementById("rollresults").innerHTML = "Roll results: ";
-					crit = false;
+					document.getElementById("rollresults").innerHTML = "Roll results:";
+					//crit = false;
 				}
 			}
 		
-			$("input[type=text]").change(function() {
+			/*$("input[type=text]").change(function() {
 				updateVals();
-			});
-			$("input[type=text]").focus(function() {
+			});*/
+			$("input[type=text]").on('keyup focus', function() {
 				updateVals();
+				var currentScoreVal = $(this).val();
+				var currentAbility = $(this).siblings("label").text();
+				drawGraphs(currentScoreVal, currentAbility);
 			});
 
-			drawGraphs();
-			function drawGraphs() {
-				//alert("Called this");
+			drawGraphs(0, null);
+			function drawGraphs(currentScoreVal, currentAbility) {
+				//alert(currentAbility);
+				//alert("Called this " + currentScoreVal);
 				const graphSize = 300;
 				const graphWidth = 40;
 				//document.getElementById("graph").innerHTML = "<h2 style='margin-top: 50px'>Probability Charts</h2>";
 				var titles = ["Novice", "Proficient", "Expert"];
 				var colors = ["lightgray", "white", "lightgray"];
+				var str = "";
 				for(var i = 1; i <= 3; i++) {
-					var str = "<div class='bargraph' style='background-color: " + colors[i - 1] + "'>";
-					str += "<h3 style='text-align: center;'>Probability of rolling <i>x</i> or higher using <strong>" + titles[i - 1] + "</strong></h3>";
+					str += "<div class='bargraph' style='background-color: " + colors[i - 1] + "'>";
+					if(currentAbility == null) {
+						str += "<h3 style='text-align: center;'>Probability of rolling <i>x</i> or higher using <strong>" + titles[i - 1] + "</strong></h3>";
+					}
+					else {
+						str += "<h3 style='text-align: center;'>Probability of rolling <i>x</i> or higher in <strong>" + currentAbility + "</strong> using <strong>" + titles[i - 1] + "</strong></h3>";
+					}
 					
 					for(var j = 0; j < maxRoll; j++){
-						var val = j + 1;
+						var val;
+						if(j == 0) {
+							val = "<span style='font-weight: bold; color: red;'>CF</b>"
+						}
+						else if(j == maxRoll - 1) {
+							val = "<span style='font-weight: bold; color: green;'>CS</b>";
+						}
+						else {
+							var val = j + 1 + Number(currentScoreVal);
+						}
 						var probs = (1 - Math.pow((j / maxRoll), i));
-						str += "<div class='bargraph-wrapper'><p>" + Math.round(probs * 100) + "%</p><div class='bargraph-wrapper2'><div class='bargraph" + i + "' style='width: " + graphWidth + "px; height: " + probs*graphSize + "px;'></div></div><p>" + val + "</p></div>";
+						str += "<div class='bargraph-wrapper'><p style='text-align: center;'>" + Math.round(probs * 100) + "%</p><div class='bargraph-wrapper2'><div class='bargraph" + i + "' style='width: " + graphWidth + "px; height: " + probs*graphSize + "px;'></div></div><p>" + val + "</p></div>";
 					}
 					str += "</div>";
-					document.getElementById("graph").innerHTML += str;
 				}
+				
+				document.getElementById("graph").innerHTML = str;
 			}
 		</script>
 	</body>
