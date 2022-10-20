@@ -1,0 +1,245 @@
+<html>
+
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="p-1 text-center">
+        <p class="h2">Roll ya shit</p>
+    </div>
+    <div>
+        <div class="container-fluid p-2 px-4" id="main-table">
+            <div class="row roller">
+                <div class="col text-center">
+                    <div id="roll-val" class="h1"></div>
+                    <div id="roll-list"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+            </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+            </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+            </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+            </div>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const dieMax = 6;
+    const countedDice = 2;
+    const stats = [
+        {
+            name: 'Endurance',
+            val: 0
+        },
+        {
+            name: 'Strength',
+            val: 0
+        },
+        {
+            name: 'Coordination',
+            val: 0
+        },
+        {
+            name: 'Knowledge',
+            val: 0
+        },
+        {
+            name: 'Cunning',
+            val: 0
+        },
+        {
+            name: 'Instinct',
+            val: 0
+        },
+        {
+            name: 'Resolve',
+            val: 0
+        },
+        {
+            name: 'Diplomacy',
+            val: 0
+        }
+    ];
+    const adv = [
+        {
+            name: "Advantage",
+            val: 0
+        },
+        {
+            name: "Expert",
+            val: 1
+        },
+        {
+            name: "Proficient",
+            val: 0
+        },
+        {
+            name: "Novice",
+            val: -1
+        },
+        {
+            name: "Disadvantage",
+            val: -2
+        }
+    ]
+
+
+    const trait = (ind) =>
+        (val) => {
+            if (val) { stats[ind].val = val; return; }
+            else { return stats[ind]; }
+        }
+
+    const endurance = trait(0);
+    const strength = trait(1);
+    const coordination = trait(2);
+    const knowledge = trait(3);
+    const cunning = trait(4);
+    const instinct = trait(5);
+    const resolve = trait(6);
+    const diplomacy = trait(7);
+
+    const succMin = 11;
+    const mixMin = 6;
+    const failMin = 2;
+
+    const success = (val) => {
+        return val >= succMin;
+    }
+    const mixed = (val) => {
+        return val >= mixMin && val < succMin;
+    }
+    const fail = (val) => {
+        val >= failMin && val < mixMin;
+    }
+
+    const rollDice = (skillInd, advFactor) => {
+        $("#main-table").children(".row").eq(0);
+        rolls = [];
+        const isAdv = advFactor >= 0;
+        const dieCount = Math.min(countedDice, Math.abs(advFactor));
+        for (let i = 0; i < dieCount; i++) {
+            rolls.push(rollDie());
+        }
+
+        const actualRolls = rolls.slice(0, countedDice - 1);
+
+        //replace the lower roll with the stat value if applicable
+        const totalRoll = Math.max(actualRolls) + Math.max(
+            (Math.min(actualRolls)), stats[skillInd].val
+        );
+
+        let rollClass;
+        var rollVal = totalRoll.toString();
+        $("#roll-val").removeClass(rollClass);
+        if(actualRolls.sum() == countedDice) {
+            rollClass = "text-danger";
+            rollVal = "CRITICAL FAIL"
+        }
+        else if(actualRolls.sum() == (countedDice * dieMax)){
+            rollClass = "text-success";
+            rollVal = "CRITICAL SUCCESS"
+        }
+
+        $("#roll-val").addClass(rollClass);
+        $("#roll-val").innerHTML(rollVal);
+        $("#roll-list").innerHTML = Array.join(" ", rolls);
+    }
+
+    const rollDie = () => {
+        return randNumber(1, dieMax);
+    }
+
+    const randNumber = (min, max) => {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min);
+    }
+
+    const setup = () => {
+        //table headers
+        $("#main-table").children(".row").eq(1).children("div").each((index, elem) => {
+            if (index == 0) return;
+            elem.innerHTML = stats[index - 1].name;
+        })
+
+        //set up rollers
+        for(let i = 0; i < adv.length; i++){
+            const htmlIndex = i + 2;;
+            $("#main-table").children(".row").eq(htmlIndex).children("div.col").each((index, elem) => {
+                elem.innerHTML = `<div class='hover btn-primary' data-bs-toggle='tooltip'
+                 title='${stats[i].name} w/ ${adv[i].name}'>
+                    </div>`;
+
+                $(elem).on('click', () => {
+                    rollDice(i, adv[i].val);
+                });
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        setup();
+
+        $("#main-table .row:not(.roller) div.col .btn-roll").on("click", () => {
+        });
+    });
+</script>
+
+</html>
