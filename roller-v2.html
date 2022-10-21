@@ -5,12 +5,18 @@
         .roll-button:not(:hover) {
             color: rgba(0, 0, 0, 0) !important;
         }
+
         .roll-button {
-            font-weight: bolder;
+            font-weight: bolder !important;
             letter-spacing: .2rem;
         }
-        .xxx-row > div {
+
+        .xxx-row>div {
             padding: .5rem;
+        }
+
+        #stat-val-die {
+            cursor: pointer;
         }
     </style>
     <!-- Latest compiled and minified CSS -->
@@ -26,7 +32,7 @@
         <p class="h2">Roll ya shit</p>
     </div>
     <div>
-        <div class="container-fluid p-2 px-4" style="min-width: 1000px;" id="main-table">
+        <div class="container-fluid p-2 px-4" style="min-width: 1200px;" id="main-table">
             <div class="xxx-row row roller">
                 <div class="col text-center">
                     <div id="roll-val" class="h1"></div>
@@ -199,31 +205,39 @@
         for (let i = 0; i < dieCount; i++) {
             rolls.push(rollDie());
         }
+        rolls.push(skill.val);
         rolls.sort();
-        if(isAdv) rolls.reverse();
+        if (isAdv) rolls.reverse();
+
+        const statIndex = rolls.indexOf(skill.val);
 
         const actualRolls = rolls.slice(0, countedDice); //only get 2 dice
 
         //replace the lower roll with the stat value if applicable
-        const totalRoll = Math.max(...actualRolls) + Math.max(
-            Math.min(...actualRolls), skill.val
-        );
+        const totalRoll = sum(actualRolls);
 
         let rollClass;
         var rollVal = totalRoll.toString();
         $("#roll-val").removeClass("text-danger text-success");
-        if(sum(actualRolls) == countedDice) {
+        if (totalRoll == countedDice) {
             rollClass = "text-danger";
             rollVal = "CRITICAL FAIL"
         }
-        else if(sum(actualRolls) == (countedDice * dieMax)){
+        else if (totalRoll == (countedDice * dieMax)) {
             rollClass = "text-success";
             rollVal = "CRITICAL SUCCESS"
         }
 
+        rolls[statIndex] = `<span class='text-danger fw-bolder text-decoration-underline'
+            data-bs-toggle='tooltip'
+            id='stat-val-die'
+            title='${skill.name} value'>
+            ${rolls[statIndex]}
+            </span>`
         $("#roll-val").addClass(rollClass);
         $("#roll-val").text(rollVal);
-        $("#roll-list").text(rolls.join(' '));
+        $("#roll-list").html(`<div>${rolls.join(' ')}</div>`);
+        new bootstrap.Tooltip($("#roll-list #stat-val-die"));
     }
 
     const sum = (arr) => arr.reduce((accumulator, value) => {
@@ -254,17 +268,19 @@
             inputter.on("input", () => {
                 stats[index - 1].val = Number(inputter.val());
             })
-        })
+        });
 
         //set up rollers
-        for(let i = 0; i < adv.length; i++){
+        for (let i = 0; i < adv.length; i++) {
             const htmlIndex = i + 2;
             $("#main-table").children(".xxx-row").eq(htmlIndex).children("div").each((index, elem) => {
-                if(index == 0) {
-                    elem.innerHTML = `<div style="text-align: right; width: 100%;">${adv[i].name}</div>`;
+                if (index == 0) {
+                    elem.innerHTML = `<div style="text-align: right; width: 100%;">
+                        ${adv[i].name} (${adv[i].val >= 0 ? '+' : ''}${adv[i].val})
+                        </div>`;
                     return;
                 }
-                elem.innerHTML = `<div style="height: 2rem;"
+                elem.innerHTML = `<div style="height: 2.5rem;"
                  class='hover btn btn-primary my-2 mx-3 roll-button w-100'
                  data-bs-toggle='tooltip'
                  title='${stats[index - 1].name} w/ ${adv[i].name}'>
@@ -279,9 +295,9 @@
 
         //initialize tooltips
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
     }
 
     $(document).ready(function () {
