@@ -202,28 +202,35 @@
         let rolls = [];
         const isAdv = advFactor >= 0;
         const dieCount = countedDice + Math.abs(advFactor);
+        
         for (let i = 0; i < dieCount; i++) {
             rolls.push(rollDie());
         }
+
+        const resort = () => {
+            rolls.sort();
+            if (isAdv) rolls.reverse();
+        }
+
+        resort();
+        const actualRoll = sum(rolls.slice(0, countedDice)); //only get 2 dice (pre-stat add)ty
+
         rolls.push(skill.val);
-        rolls.sort();
-        if (isAdv) rolls.reverse();
-
+        resort();
         const statIndex = rolls.indexOf(skill.val);
-
-        const actualRolls = rolls.slice(0, countedDice); //only get 2 dice
+        const modifiedRolls = rolls.slice(0, countedDice);
 
         //replace the lower roll with the stat value if applicable
-        const totalRoll = sum(actualRolls);
+        const totalRoll = sum(modifiedRolls);
 
         let rollClass;
         var rollVal = totalRoll.toString();
         $("#roll-val").removeClass("text-danger text-success");
-        if (totalRoll == countedDice) {
+        if (actualRoll == countedDice) {
             rollClass = "text-danger";
             rollVal = "CRITICAL FAIL"
         }
-        else if (totalRoll == (countedDice * dieMax)) {
+        else if (actualRoll == (countedDice * dieMax)) {
             rollClass = "text-success";
             rollVal = "CRITICAL SUCCESS"
         }
