@@ -1,6 +1,18 @@
 <html>
 
 <head>
+    <style>
+        .roll-button:not(:hover) {
+            color: rgba(0, 0, 0, 0) !important;
+        }
+        .roll-button {
+            font-weight: bolder;
+            letter-spacing: .2rem;
+        }
+        .xxx-row > div {
+            padding: .5rem;
+        }
+    </style>
     <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -14,67 +26,78 @@
         <p class="h2">Roll ya shit</p>
     </div>
     <div>
-        <div class="container-fluid p-2 px-4" id="main-table">
-            <div class="row roller">
+        <div class="container-fluid p-2 px-4" style="min-width: 1000px;" id="main-table">
+            <div class="xxx-row row roller">
                 <div class="col text-center">
                     <div id="roll-val" class="h1"></div>
                     <div id="roll-list"></div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
+            <div class="xxx-row d-flex flex-row justify-content-center">
+                <div class="w-100"></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
             </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
             </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
             </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
             </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col"></div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+            </div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
             </div>
         </div>
     </div>
@@ -119,7 +142,7 @@
     const adv = [
         {
             name: "Advantage",
-            val: 0
+            val: 2
         },
         {
             name: "Expert",
@@ -169,38 +192,43 @@
         val >= failMin && val < mixMin;
     }
 
-    const rollDice = (skillInd, advFactor) => {
-        $("#main-table").children(".row").eq(0);
-        rolls = [];
+    const rollDice = (skill, advFactor) => {
+        let rolls = [];
         const isAdv = advFactor >= 0;
-        const dieCount = Math.min(countedDice, Math.abs(advFactor));
+        const dieCount = countedDice + Math.abs(advFactor);
         for (let i = 0; i < dieCount; i++) {
             rolls.push(rollDie());
         }
+        rolls.sort();
+        if(isAdv) rolls.reverse();
 
-        const actualRolls = rolls.slice(0, countedDice - 1);
+        const actualRolls = rolls.slice(0, countedDice); //only get 2 dice
 
         //replace the lower roll with the stat value if applicable
-        const totalRoll = Math.max(actualRolls) + Math.max(
-            (Math.min(actualRolls)), stats[skillInd].val
+        const totalRoll = Math.max(...actualRolls) + Math.max(
+            Math.min(...actualRolls), skill.val
         );
 
         let rollClass;
         var rollVal = totalRoll.toString();
-        $("#roll-val").removeClass(rollClass);
-        if(actualRolls.sum() == countedDice) {
+        $("#roll-val").removeClass("text-danger text-success");
+        if(sum(actualRolls) == countedDice) {
             rollClass = "text-danger";
             rollVal = "CRITICAL FAIL"
         }
-        else if(actualRolls.sum() == (countedDice * dieMax)){
+        else if(sum(actualRolls) == (countedDice * dieMax)){
             rollClass = "text-success";
             rollVal = "CRITICAL SUCCESS"
         }
 
         $("#roll-val").addClass(rollClass);
-        $("#roll-val").innerHTML(rollVal);
-        $("#roll-list").innerHTML = Array.join(" ", rolls);
+        $("#roll-val").text(rollVal);
+        $("#roll-list").text(rolls.join(' '));
     }
+
+    const sum = (arr) => arr.reduce((accumulator, value) => {
+        return accumulator + value;
+    }, 0);
 
     const rollDie = () => {
         return randNumber(1, dieMax);
@@ -208,37 +236,56 @@
 
     const randNumber = (min, max) => {
         min = Math.ceil(min);
-        max = Math.floor(max);
+        max = Math.floor(max) + 1;
         return Math.floor(Math.random() * (max - min) + min);
     }
 
     const setup = () => {
         //table headers
-        $("#main-table").children(".row").eq(1).children("div").each((index, elem) => {
+        $("#main-table").children(".xxx-row").eq(1).children("div").each((index, elem) => {
             if (index == 0) return;
-            elem.innerHTML = stats[index - 1].name;
+            elem.innerHTML = `<div class='w-100 text-center my-2'>${stats[index - 1].name}</div>
+            <div class="setter w-100 my-2 mx-3">
+                <input class='form-control' type='text' value='${stats[index - 1].val}'>
+                </div>
+            `;
+
+            let inputter = $(elem).find(".setter input").first();
+            inputter.on("input", () => {
+                stats[index - 1].val = Number(inputter.val());
+            })
         })
 
         //set up rollers
         for(let i = 0; i < adv.length; i++){
-            const htmlIndex = i + 2;;
-            $("#main-table").children(".row").eq(htmlIndex).children("div.col").each((index, elem) => {
-                elem.innerHTML = `<div class='hover btn-primary' data-bs-toggle='tooltip'
-                 title='${stats[i].name} w/ ${adv[i].name}'>
+            const htmlIndex = i + 2;
+            $("#main-table").children(".xxx-row").eq(htmlIndex).children("div").each((index, elem) => {
+                if(index == 0) {
+                    elem.innerHTML = `<div style="text-align: right; width: 100%;">${adv[i].name}</div>`;
+                    return;
+                }
+                elem.innerHTML = `<div style="height: 2rem;"
+                 class='hover btn btn-primary my-2 mx-3 roll-button w-100'
+                 data-bs-toggle='tooltip'
+                 title='${stats[index - 1].name} w/ ${adv[i].name}'>
+                 ROLL
                     </div>`;
 
                 $(elem).on('click', () => {
-                    rollDice(i, adv[i].val);
+                    rollDice(stats[index - 1], adv[i].val);
                 });
             });
         }
+
+        //initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
     }
 
     $(document).ready(function () {
         setup();
-
-        $("#main-table .row:not(.roller) div.col .btn-roll").on("click", () => {
-        });
     });
 </script>
 
