@@ -30,18 +30,28 @@ export const calculateProbabilityOfRoll = (expected, diceRolled = 2, takeMax = t
 
 
     additiveCombos.forEach((value) => {
+        let d1 = value[0], d2 = value[1];
         //number of remaining die not in the sum combo
         let remaining = diceRolled - dieCounted;
         /** Get the range of values that are now permitted
             e.g. if the sum combo is [4, 5] and you're looking for the max,
             the valid range is 1-4, so 4 possible values
         */ 
-        let rng = takeMax ? value + 1 - min : max + 1 - value;
+        let rng = takeMax ? d2 + 1 - min : max + 1 - d2;
+
+        if(d1 == d2) {
+            //if we need duplicates, then it's the probability that all values are that or lower
+            //intersected with the probability that at least two are exactly that value
+            let proball = Math.pow((rng / max), diceRolled);
+            totalCombos += 0;
+            return;
+        }
+
         //this is a really inefficient brute force approach
         for(let i = 0; i < remaining; i++) {
             let res = [];
             for(let j = i + 1; j <= rng; j++) {
-                
+
             }
         }
         let dgr = uniquenessDegree(value);

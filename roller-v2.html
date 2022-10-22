@@ -215,10 +215,25 @@
         resort();
         const actualRoll = sum(rolls.slice(0, countedDice)); //only get 2 dice (pre-stat add)ty
 
-        rolls.push(skill.val);
-        resort();
-        const statIndex = rolls.indexOf(skill.val);
-        const modifiedRolls = rolls.slice(0, countedDice);
+        let m0 = 0, m1 = 1;
+        let statIndex = 0;
+
+        if (isAdv) {
+            rolls.push(skill.val);
+            resort();
+            statIndex = rolls.indexOf(skill.val);
+        }
+        else {
+            rolls = [skill.val, ...rolls];
+            if(rolls[0] >= rolls[1]) {
+                rolls[0] = rolls[1];
+                rolls[1] = skill.val;
+                statIndex++;
+            }
+            m0++;
+            m1++;
+        }
+        const modifiedRolls = rolls.slice(m0, countedDice + m0);
 
         //replace the lower roll with the stat value if applicable
         const totalRoll = sum(modifiedRolls);
@@ -241,6 +256,8 @@
             title='${skill.name} value'>
             ${rolls[statIndex]}
             </span>`
+        rolls[m0] = `<span class='border bg-light'>&nbsp;${rolls[m0]}`;
+        rolls[m1] = `${rolls[m1]}&nbsp;</span>`;
         $("#roll-val").addClass(rollClass);
         $("#roll-val").text(rollVal);
         $("#roll-list").html(`<div>${rolls.join(' ')}</div>`);
