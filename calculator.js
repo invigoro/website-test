@@ -1,5 +1,5 @@
 const calculateProbabilityOfRoll = (expected, diceRolled = 2, takeMax = true) => {
-    const dieCounted = 2;
+    const diceCounted = 2;
     const min = 1;
     const max = 6;
 
@@ -10,10 +10,10 @@ const calculateProbabilityOfRoll = (expected, diceRolled = 2, takeMax = true) =>
         let startingPoint = Math.min(max, val);
         for(let i = startingPoint; i >= min; i--) {
             let otherDie = val - i;
-            if(otherDie <= max) {
+            if(otherDie <= max && otherDie >= min && otherDie <= i) {
                 combos.add([otherDie, i]);
             }
-            if(otherDie <= i){
+            if(otherDie >= i){
                 break;
             }
         }
@@ -28,40 +28,49 @@ const calculateProbabilityOfRoll = (expected, diceRolled = 2, takeMax = true) =>
     console.log(additiveCombos);
 
     additiveCombos.forEach((value) => {
-        let d1 = value[0], d2 = value[1];
-        //number of remaining die not in the sum combo
-        let remaining = diceRolled - dieCounted;
+        let d1 = value[0], //lower value
+         d2 = value[1];// higher value
+         
         /** Get the range of values that are now permitted
             e.g. if the sum combo is [4, 5] and you're looking for the max,
             the valid range is 1-4, so 4 possible values
-        */ 
-        let rng = takeMax ? d2 + 1 - min : max + 1 - d2;
+        */
+        let rng = takeMax ? d1 + 1 - min : max + 1 - d2;
 
-        let probCombo = Math.pow(1 / max, dieCounted);
-        let probRemaining = Math.pow(rng / max, remaining);
-        let coeff = binomial(max, diceRolled);
-        totalCombos += coeff * probCombo * probRemaining;
+        if(d1 != d2) {
+            //step 1: probability that there is exactly one occurrence of the extreme value
+            let probA = (1 / max) * Math.pow((max - 1) / max, diceRolled - 1)
+             * binomial(diceRolled, 1);
 
-        // if(d1 == d2) {
-        //     //if we need duplicates, then it's the probability that all values are that or lower
-        //     //intersected with the probability that at least two are exactly that value
-        //     let proball = Math.pow((rng / max), diceRolled);
-        //     totalCombos += 0;
-        //     return;
-        // }
+            //step 2: probability that all remaining dice are less than or equal to the secondary value, 
+            //given that there is already one  of the extreme
+            let probB = Math.pow(rng / max, diceRolled - 1);
 
-        // //this is a really inefficient brute force approach
-        // for(let i = 0; i < remaining; i++) {
-        //     let res = [];
-        //     for(let j = i + 1; j <= rng; j++) {
+            //step 3: probability that given B, at least one is the secondary value
+            let probC = 1 - Math.pow((rng - 1) / rng, diceRolled - 1);
 
-        //     }
-        // }
-        // let dgr = uniquenessDegree(value);
-        // totalCombos += ();
+            console.log(value);
+            console.log(probA);
+            console.log(probB);
+            console.log(probC);
+            console.log(probA * probB * probC);
+            totalCombos += probA * probB * probC;
+        }
+        else {
+            //step 1: probability that all are at or below the value
+            let probA = Math.pow(rng / max, diceRolled);
+
+            //step 2: given A, probability that there are at least two occurrences of the value
+            let probB = 1 -  Math.pow((rng - 1) / rng, diceRolled)
+            - ((1 / rng) * Math.pow((rng - 1) / rng, diceRolled - 1)
+            * binomial(diceRolled, 2));
+            console.log(value);
+            console.log(probA * probB);
+            totalCombos += probA * probB;
+        }
     });
 
-    return totalCombos / Math.pow(max - min + 1, diceRolled);
+    return totalCombos;
 }
 
 const binomial = (n, k) => {
@@ -75,11 +84,14 @@ const binomial = (n, k) => {
 
 
 function runTests() {
-    calculateProbabilityOfRoll(7, 2);
-    calculateProbabilityOfRoll(7, 3);
-    calculateProbabilityOfRoll(7, 4);
-    calculateProbabilityOfRoll(7, 5);
-    calculateProbabilityOfRoll(6, 3, false);
+    // calculateProbabilityOfRoll(7, 2);
+    // calculateProbabilityOfRoll(7, 3);
+    // calculateProbabilityOfRoll(7, 4);
+    // calculateProbabilityOfRoll(7, 5);
+    // calculateProbabilityOfRoll(6, 3, false);
+    calculateProbabilityOfRoll(2, 3);
+    calculateProbabilityOfRoll(3, 3);
+    calculateProbabilityOfRoll(4, 3);
 }
 
 runTests();
