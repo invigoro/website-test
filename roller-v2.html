@@ -331,14 +331,22 @@
         }
     }
 
+    const loadStoredStatsToStatArray = () => {
+        stats.forEach((val, ind) => {
+            val.val = getStoredStat(ind) || val.val;
+        })
+    }
+
     const setup = () => {
-        
+        //get cookie values
+        loadStoredStatsToStatArray();
+
         //table headers
         $("#main-table").children(".xxx-row").eq(1).children("div").each((index, elem) => {
             if (index == 0) return;
             elem.innerHTML = `<div class='w-100 text-center my-2'>${stats[index - 1].name}</div>
             <div class="setter w-100 my-2 mx-3">
-                <input class='form-control' type='text' value='${getStoredStat(index - 1) || stats[index - 1].val}'>
+                <input class='form-control' type='text' value='${stats[index - 1].val}'>
                 </div>
             `;
 
