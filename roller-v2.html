@@ -287,11 +287,56 @@
         return Math.floor(Math.random() * (max - min) + min);
     }
 
+    const setCookie = (cname, cvalue, exdays) => {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires="+d.toUTCString();
+        let cookieString = cname + "=" + cvalue + ";" + expires + ";path=/";
+        console.log(cookieString);
+        document.cookie = cookieString;
+        console.log(document.cookie);
+    }
+
+    const getCookie = (cname) => {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+
+        const setStoredStats = (statArray) => {
+        let statString = String(statArray.join(","));
+        console.log(statString);
+        setCookie('storedStats', statString, 365);
+    }
+
+    const getStoredStat = (index) => {
+        let statString = getCookie('storedStats');
+        try {
+            let arr = statString.split(",");
+            return Number(arr[index]);
+        }
+        catch(e) {
+            return null;
+        }
+    }
+
     const setup = () => {
+        
         //table headers
         $("#main-table").children(".xxx-row").eq(1).children("div").each((index, elem) => {
             if (index == 0) return;
-            elem.innerHTML = `<div class='w-100 text-center my-2'>${stats[index - 1].name}</div>
+            elem.innerHTML = `<div class='w-100 text-center my-2'>${getStoredStat(index - 1) || stats[index - 1].name}</div>
             <div class="setter w-100 my-2 mx-3">
                 <input class='form-control' type='text' value='${stats[index - 1].val}'>
                 </div>
@@ -300,6 +345,7 @@
             let inputter = $(elem).find(".setter input").first();
             inputter.on("input", () => {
                 stats[index - 1].val = Number(inputter.val());
+                setStoredStats(stats.map((elem, index) => {return elem.val}));
             })
         });
 
