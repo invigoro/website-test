@@ -23,6 +23,11 @@
             background-color: #4b08a3 !important;
             border-color: #4b08a3 !important;
         }
+        
+        #roll-dice-list img {
+            width: 20px;
+            height: 20px;
+        }
     </style>
     <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -44,6 +49,7 @@
             <div class="xxx-row row roller">
                 <div class="col text-center">
                     <div id="roll-val" class="h1 display-4 fw-bolder"></div>
+                    <div id="roll-dice-list" class="my-2"></div>
                     <div id="roll-list"></div>
                 </div>
             </div>
@@ -209,6 +215,7 @@
 
     const rollDice = (skill, advFactor) => {
         let rolls = [];
+        let rollDiceImg = [];
         const isAdv = advFactor >= 0;
         const dieCount = countedDice + Math.abs(advFactor);
         
@@ -216,12 +223,20 @@
             rolls.push(rollDie());
         }
 
+        //sort descending for adv, ascending for disadvantage
         const resort = () => {
             rolls.sort();
             if (isAdv) rolls.reverse();
         }
 
+
         resort();
+
+        //set the dice images
+        for (let i = 0; i < dieCount; i++) {
+            rollDiceImg.push(`<img src='img/dice-${rolls[i]}.svg'>`);
+        }
+
         const actualRoll = sum(rolls.slice(0, countedDice)); //only get 2 dice (pre-stat add)ty
 
         let m0 = 0, m1 = 1;
@@ -269,6 +284,7 @@
         rolls[m1] = `${rolls[m1]}&nbsp;</span>`;
         $("#roll-val").addClass(rollClass);
         $("#roll-val").text(rollVal);
+        $("#roll-dice-list").html(`<div>${rollDiceImg.join('')}</div>`);
         $("#roll-list").html(`<div>${rolls.join(' ')}</div>`);
         new bootstrap.Tooltip($("#roll-list #stat-val-die"));
     }
