@@ -1,0 +1,392 @@
+<html>
+
+<head>
+    <style>
+        .roll-button:not(:hover) {
+            color: rgba(0, 0, 0, 0) !important;
+        }
+
+        .roll-button {
+            font-weight: bolder !important;
+            letter-spacing: .2rem;
+        }
+
+        .xxx-row>div {
+            padding: .5rem;
+        }
+
+        #stat-val-die {
+            cursor: pointer;
+        }
+
+        .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+            background-color: #4b08a3 !important;
+            border-color: #4b08a3 !important;
+        }
+
+        #dice-box-container {
+            width: 100%;
+            height: 320px;
+            position: relative;
+            background: radial-gradient(ellipse at center, #2a2a2a 0%, #141414 100%);
+            border-radius: .5rem;
+            overflow: hidden;
+        }
+
+        #roll-tier {
+            font-weight: bolder;
+            letter-spacing: .15rem;
+            min-height: 1.5em;
+        }
+
+        #roll-list span.text-muted {
+            opacity: .5;
+        }
+    </style>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/style.css">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="p-1 pt-4 text-center">
+        <p class="h2">New World Dice Roller</p>
+    </div>
+    <div class="p-1 text-center">
+        <p class="h5">Adjust your stats then roll based on proficiencies</p>
+    </div>
+    <div>
+        <div class="container-fluid p-2 px-4" style="min-width: 1200px;" id="main-table">
+            <div class="xxx-row row roller">
+                <div class="col text-center">
+                    <div id="dice-box-container" class="mx-auto" style="max-width: 700px;">
+                        <div id="dice-box" style="width: 100%; height: 100%; position: absolute;"></div>
+                    </div>
+                    <div id="roll-val" class="h1 display-4 fw-bolder mt-3"></div>
+                    <div id="roll-tier" class="my-1"></div>
+                    <div id="roll-list" class="my-2"></div>
+                </div>
+            </div>
+            <div class="xxx-row d-flex flex-row justify-content-center">
+                <div class="w-100"></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+            </div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+            </div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+            </div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+            </div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+            </div>
+            <div class="xxx-row d-flex flex-row justify-content-center align-items-center">
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+                <div class='w-100'></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="module">
+    import DiceBox from "https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/dice-box.es.min.js";
+
+    const dieMax = 6;
+    const countedDice = 2;
+    const stats = [
+        { name: 'Endurance', val: 1 },
+        { name: 'Strength', val: 1 },
+        { name: 'Coordination', val: 1 },
+        { name: 'Knowledge', val: 1 },
+        { name: 'Cunning', val: 1 },
+        { name: 'Instinct', val: 1 },
+        { name: 'Resolve', val: 1 },
+        { name: 'Diplomacy', val: 1 }
+    ];
+    const adv = [
+        { name: "Advantage", val: 3 },
+        { name: "Expert", val: 2 },
+        { name: "Proficient", val: 1 },
+        { name: "Novice", val: 0 },
+        { name: "Disadvantage", val: -1 }
+    ];
+
+    const succMin = 10;
+    const mixMin = 6;
+
+    const tierFor = (total) => {
+        if (total >= succMin) return 'success';
+        if (total >= mixMin) return 'mixed';
+        return 'failure';
+    };
+
+    const tierLabels = {
+        'critical-success': 'CRITICAL SUCCESS',
+        'success': 'SUCCESS',
+        'mixed': 'MIXED SUCCESS',
+        'failure': 'FAILURE',
+        'critical-failure': 'CRITICAL FAILURE'
+    };
+
+    const tierClasses = {
+        'critical-success': 'text-success',
+        'success': 'text-success',
+        'mixed': 'text-warning',
+        'failure': 'text-secondary',
+        'critical-failure': 'text-danger'
+    };
+
+    // Pure game-logic port of v2's rollDice math: replace the lower of the
+    // two kept dice with the stat value if the stat is higher. Advantage
+    // rolls more dice and keeps the highest two; disadvantage rolls more
+    // and keeps the lowest two. Critical success/failure are based on the
+    // two kept dice *before* stat substitution.
+    const computeRollResult = (rawDice, advFactor, statVal) => {
+        const isAdv = advFactor >= 0;
+        let sorted = [...rawDice].sort((a, b) => a - b);
+        if (isAdv) sorted.reverse();
+
+        const actualRollSum = sorted.slice(0, countedDice).reduce((a, b) => a + b, 0);
+        const isCritFail = actualRollSum === countedDice;
+        const isCritSuccess = actualRollSum === countedDice * dieMax;
+
+        let pool, m0, m1, statIndex;
+        if (isAdv) {
+            pool = [...sorted, statVal];
+            pool.sort((a, b) => a - b).reverse();
+            statIndex = pool.indexOf(statVal);
+            m0 = 0; m1 = 1;
+        } else {
+            pool = [statVal, ...sorted];
+            if (pool[0] >= pool[1]) {
+                pool[0] = pool[1];
+                pool[1] = statVal;
+                statIndex = 1;
+            } else {
+                statIndex = -1;
+            }
+            m0 = 1; m1 = 2;
+        }
+
+        const total = pool[m0] + pool[m1];
+        const tier = isCritFail ? 'critical-failure' : isCritSuccess ? 'critical-success' : tierFor(total);
+
+        return { pool, m0, m1, statIndex, total, tier, isCritFail, isCritSuccess };
+    };
+
+    const setCookie = (cname, cvalue, exdays) => {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires=" + d.toUTCString();
+        let cookieString = cname + "=" + cvalue + ";" + expires + ";path=/";
+        document.cookie = cookieString;
+    };
+
+    const getCookie = (cname) => {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    };
+
+    const setStoredStats = (statArray) => {
+        let statString = String(statArray.join(","));
+        setCookie('storedStats', statString, 365);
+    };
+
+    const getStoredStat = (index) => {
+        let statString = getCookie('storedStats');
+        try {
+            let arr = statString.split(",");
+            return Number(arr[index]);
+        }
+        catch (e) {
+            return null;
+        }
+    };
+
+    const loadStoredStatsToStatArray = () => {
+        stats.forEach((val, ind) => {
+            val.val = getStoredStat(ind) || val.val;
+        });
+    };
+
+    const renderResult = (stat, advEntry, result) => {
+        $("#roll-val").removeClass("text-danger text-success text-warning text-secondary");
+        $("#roll-val").addClass(tierClasses[result.tier]);
+        $("#roll-val").text(result.isCritFail || result.isCritSuccess ? tierLabels[result.tier] : result.total);
+
+        $("#roll-tier").removeClass("text-danger text-success text-warning text-secondary");
+        $("#roll-tier").addClass(tierClasses[result.tier]);
+        $("#roll-tier").text(`${tierLabels[result.tier]} — ${stat.name} w/ ${advEntry.name}`);
+
+        const pieces = result.pool.map((val, i) => {
+            let html = String(val);
+            if (i === result.statIndex) {
+                html = `<span class='text-danger fw-bolder text-decoration-underline'
+                    data-bs-toggle='tooltip'
+                    id='stat-val-die'
+                    title='${stat.name} value'>${html}</span>`;
+            }
+            if (i === result.m0 || i === result.m1) {
+                html = `<span class='border bg-light px-2 mx-1'>${html}</span>`;
+            } else {
+                html = `<span class='text-muted mx-1'>${html}</span>`;
+            }
+            return html;
+        });
+        $("#roll-list").html(pieces.join(' '));
+        var tooltip = document.querySelector("#roll-list #stat-val-die");
+        if (tooltip) new bootstrap.Tooltip(tooltip);
+    };
+
+    let diceBox;
+    let rolling = false;
+
+    const setupDiceBox = async () => {
+        diceBox = new DiceBox({
+            container: "#dice-box",
+            assetPath: "assets/",
+            origin: "https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/",
+            theme: "default",
+            scale: 6,
+            gravity: 1,
+            settleTimeout: 2500,
+            angularDamping: 0.4,
+            linearDamping: 0.4
+        });
+        await diceBox.init();
+    };
+
+    const rollDice = async (stat, advEntry) => {
+        if (rolling || !diceBox) return;
+        rolling = true;
+        try {
+            const dieCount = countedDice + Math.abs(advEntry.val);
+            const rollResults = await diceBox.roll(`${dieCount}d6`);
+            const rawDice = rollResults.map((r) => r.value);
+            const result = computeRollResult(rawDice, advEntry.val, stat.val);
+            renderResult(stat, advEntry, result);
+        }
+        finally {
+            rolling = false;
+        }
+    };
+
+    const setup = async () => {
+        //get cookie values
+        loadStoredStatsToStatArray();
+
+        //table headers
+        $("#main-table").children(".xxx-row").eq(1).children("div").each((index, elem) => {
+            if (index == 0) return;
+            elem.innerHTML = `<div class='w-100 text-center my-2'>${stats[index - 1].name}</div>
+            <div class="setter w-100 my-2 mx-3">
+                <input class='form-control' type='text' value='${stats[index - 1].val}'>
+                </div>
+            `;
+
+            let inputter = $(elem).find(".setter input").first();
+            inputter.on("input", () => {
+                stats[index - 1].val = Number(inputter.val());
+                setStoredStats(stats.map((elem) => elem.val));
+            });
+        });
+
+        //set up rollers
+        for (let i = 0; i < adv.length; i++) {
+            const htmlIndex = i + 2;
+            $("#main-table").children(".xxx-row").eq(htmlIndex).children("div").each((index, elem) => {
+                if (index == 0) {
+                    elem.innerHTML = `<div style="text-align: right; width: 100%;">
+                        ${adv[i].name} (${adv[i].val >= 0 ? '+' : ''}${adv[i].val})
+                        </div>`;
+                    return;
+                }
+                elem.innerHTML = `<div style="height: 2.5rem;"
+                 class='hover btn btn-primary my-2 mx-3 roll-button w-100'
+                 data-bs-toggle='tooltip'
+                 title='${stats[index - 1].name} w/ ${adv[i].name}'>
+                 ROLL
+                    </div>`;
+
+                $(elem).on('click', () => {
+                    rollDice(stats[index - 1], adv[i]);
+                });
+            });
+        }
+
+        //initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        await setupDiceBox();
+    };
+
+    $(document).ready(() => {
+        setup();
+    });
+</script>
+
+</html>
