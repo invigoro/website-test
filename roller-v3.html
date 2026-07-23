@@ -90,6 +90,15 @@
             position: absolute;
         }
 
+        /* dice-box creates its own <canvas> inside #dice-box but doesn't
+           style it itself - without this it's stuck at the browser's
+           default 300x150 canvas size in the top-left corner. */
+        #dice-box canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
         .result-block {
             text-align: center;
             margin-top: 1rem;
@@ -465,7 +474,7 @@
             origin: "https://unpkg.com/@3d-dice/dice-box@1.1.4/dist/",
             theme: "default",
             themeColor: "#d9a3ff",
-            scale: 14,
+            scale: 7,
             gravity: 1,
             settleTimeout: 2500,
             angularDamping: 0.4,
